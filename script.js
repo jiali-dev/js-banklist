@@ -74,3 +74,22 @@ const currencies = new Map([
 const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
 
 /////////////////////////////////////////////////
+const displayMovements = function (movements) {
+  containerMovements.innerHTML = '';
+
+  movements.forEach(function (mov, i) {
+    // Determine type
+    const type = mov > 0 ? 'deposit' : 'withdrawal';
+
+    // Create HTML string
+    const html = `<div class="movements__row">
+          <div class="movements__type movements__type--${type}">
+            ${i} ${type.toUpperCase()}
+          </div>
+          <div class="movements__value">${mov}€</div>
+        </div>`;
+
+    // Insert HTML into the DOM
+    containerMovements.insertAdjacentHTML('afterbegin', html);
+  });
+};
