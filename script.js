@@ -104,3 +104,8 @@ const createUsernames = function (accs) {
       .join('');
   });
 };
+
+const calcPrintBalance = function (movements) {
+  const balance = movements.reduce((acc, mov) => acc + mov, 0);
+  return balance;
+};
