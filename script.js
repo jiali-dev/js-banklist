@@ -133,6 +133,13 @@ const calcDisplaySummary = function (acc) {
   labelSumInterest.textContent = `${interest}€`;
 };
 
+// Update UI
+const updateUI = function (acc) {
+  displayMovements(acc.movements);
+  calcDisplayBalance(acc);
+  calcDisplaySummary(acc);
+}
+
 // Login functionality
 let currentAccount;
 
@@ -159,9 +166,7 @@ btnLogin.addEventListener('click', function (e) {
     inputLoginPin.blur();
 
     // Update UI
-    displayMovements(currentAccount.movements);
-    calcDisplayBalance(currentAccount);
-    calcDisplaySummary(currentAccount);
+    updateUI(currentAccount);
   }
 
   // Transfer Money Functionallity
@@ -183,6 +188,7 @@ btnLogin.addEventListener('click', function (e) {
       // Doing the transfer
       currentAccount.movements.push(-amount);
       receiverAcc.movements.push(amount);
+      updateUI(currentAccount);
     }
   });
 });
