@@ -180,6 +180,8 @@ btnLogin.addEventListener('click', function (e) {
       acc => acc.username === inputTransferTo.value
     );
 
+    // Clear Inputs
+    inputTransferAmount.value = inputTransferTo.value = '';
     if (
       amount > 0 &&
       amount <= currentAccount.balance &&
@@ -187,7 +189,7 @@ btnLogin.addEventListener('click', function (e) {
     ) {
       // Doing the transfer
       currentAccount.movements.push(-amount);
-      receiverAcc.movements.push(amount);
+      receiverAcc?.movements.push(amount);
       updateUI(currentAccount);
     }
   });
