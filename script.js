@@ -105,7 +105,29 @@ const createUsernames = function (accs) {
   });
 };
 
-const calcPrintBalance = function (movements) {
+const calcDisplayBalance = function (movements) {
+  // Calculate and display balance
   const balance = movements.reduce((acc, mov) => acc + mov, 0);
-  return balance;
+  labelBalance.textContent = `${balance} EUR`;
+};
+
+const calcDisplaySummary = function (movements) {
+  // Calculate and display income
+  const income = movements
+    .filter(mov => mov > 0)
+    .reduce((acc, mov) => acc + mov, 0);
+    labelSumIn.textContent = `${income}€`;
+
+  // Calculate and display outcome
+  const out = movements
+    .filter(mov => mov < 0)
+    .reduce((acc, mov) => acc + mov, 0);
+    labelSumOut.textContent = `${Math.abs(out)}€`;
+
+  // Calculate and display interest
+  const interest = movements
+    .filter(mov => mov > 0)
+    .map( deposit => (deposit * 1.2) / 100)
+    .reduce((acc, int) => acc + int, 0);
+    labelSumInterest.textContent = `${interest}€`;
 };
