@@ -138,7 +138,7 @@ const updateUI = function (acc) {
   displayMovements(acc.movements);
   calcDisplayBalance(acc);
   calcDisplaySummary(acc);
-}
+};
 
 // Login functionality
 let currentAccount;
@@ -171,7 +171,6 @@ btnLogin.addEventListener('click', function (e) {
 
   // Transfer Money Functionallity
   btnTransfer.addEventListener('click', function (e) {
-    
     // Prevent form from submitting
     e.preventDefault();
 
@@ -191,6 +190,27 @@ btnLogin.addEventListener('click', function (e) {
       currentAccount.movements.push(-amount);
       receiverAcc?.movements.push(amount);
       updateUI(currentAccount);
+    }
+  });
+
+  btnClose.addEventListener('click', function (e) {
+    
+    // Prevent form from submitting
+    e.preventDefault();
+
+    if (
+      inputCloseUsername.value === currentAccount.username &&
+      Number(inputClosePin.value) === currentAccount.pin
+    ) {
+      const index = accounts.findIndex(
+        acc => acc.username === currentAccount.username
+      );
+
+      // Delete account
+      accounts.splice(index, 1);
+
+      // Hide UI
+      containerApp.style.opacity = 0;
     }
   });
 });
