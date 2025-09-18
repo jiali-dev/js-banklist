@@ -74,3 +74,60 @@ const currencies = new Map([
 const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
 
 /////////////////////////////////////////////////
+const displayMovements = function (movements) {
+  containerMovements.innerHTML = '';
+
+  movements.forEach(function (mov, i) {
+    // Determine type
+    const type = mov > 0 ? 'deposit' : 'withdrawal';
+
+    // Create HTML string
+    const html = `<div class="movements__row">
+          <div class="movements__type movements__type--${type}">
+            ${i} ${type.toUpperCase()}
+          </div>
+          <div class="movements__value">${mov}€</div>
+        </div>`;
+
+    // Insert HTML into the DOM
+    containerMovements.insertAdjacentHTML('afterbegin', html);
+  });
+};
+
+// Function to create usernames
+const createUsernames = function (accs) {
+  accs.forEach(function (acc) {
+    acc.username = acc.owner
+      .toLowerCase()
+      .split(' ')
+      .map(name => name[0])
+      .join('');
+  });
+};
+
+const calcDisplayBalance = function (movements) {
+  // Calculate and display balance
+  const balance = movements.reduce((acc, mov) => acc + mov, 0);
+  labelBalance.textContent = `${balance} EUR`;
+};
+
+const calcDisplaySummary = function (movements) {
+  // Calculate and display income
+  const income = movements
+    .filter(mov => mov > 0)
+    .reduce((acc, mov) => acc + mov, 0);
+    labelSumIn.textContent = `${income}€`;
+
+  // Calculate and display outcome
+  const out = movements
+    .filter(mov => mov < 0)
+    .reduce((acc, mov) => acc + mov, 0);
+    labelSumOut.textContent = `${Math.abs(out)}€`;
+
+  // Calculate and display interest
+  const interest = movements
+    .filter(mov => mov > 0)
+    .map( deposit => (deposit * 1.2) / 100)
+    .reduce((acc, int) => acc + int, 0);
+    labelSumInterest.textContent = `${interest}€`;
+};
