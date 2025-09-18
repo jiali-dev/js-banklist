@@ -84,7 +84,7 @@ const displayMovements = function (movements) {
     // Create HTML string
     const html = `<div class="movements__row">
           <div class="movements__type movements__type--${type}">
-            ${i} ${type.toUpperCase()}
+            ${i + 1} ${type.toUpperCase()}
           </div>
           <div class="movements__value">${mov}€</div>
         </div>`;
@@ -112,23 +112,23 @@ const calcDisplayBalance = function (movements) {
   labelBalance.textContent = `${balance} EUR`;
 };
 
-const calcDisplaySummary = function (movements) {
+const calcDisplaySummary = function (acc) {
   // Calculate and display income
-  const income = movements
+  const income = acc.movements
     .filter(mov => mov > 0)
     .reduce((acc, mov) => acc + mov, 0);
     labelSumIn.textContent = `${income}€`;
 
   // Calculate and display outcome
-  const out = movements
+  const out = acc.movements
     .filter(mov => mov < 0)
     .reduce((acc, mov) => acc + mov, 0);
     labelSumOut.textContent = `${Math.abs(out)}€`;
 
   // Calculate and display interest
-  const interest = movements
+  const interest = acc.movements
     .filter(mov => mov > 0)
-    .map( deposit => (deposit * 1.2) / 100)
+    .map( deposit => (deposit * acc.interestRate) / 100)
     .reduce((acc, int) => acc + int, 0);
     labelSumInterest.textContent = `${interest}€`;
 };
@@ -161,7 +161,7 @@ btnLogin.addEventListener('click', function (e) {
     // Update UI
     displayMovements(currentAccount.movements);
     calcDisplayBalance(currentAccount.movements);
-    calcDisplaySummary(currentAccount.movements);
+    calcDisplaySummary(currentAccount);
     
   }
 
