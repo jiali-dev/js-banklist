@@ -104,6 +104,7 @@ const createUsernames = function (accs) {
       .join('');
   });
 };
+createUsernames(accounts);
 
 const calcDisplayBalance = function (movements) {
   // Calculate and display balance
@@ -131,3 +132,37 @@ const calcDisplaySummary = function (movements) {
     .reduce((acc, int) => acc + int, 0);
     labelSumInterest.textContent = `${interest}€`;
 };
+
+// Login functionality
+let currentAccount;
+
+// Add Event listener for login button
+btnLogin.addEventListener('click', function (e) {
+  // Prevent form from submitting
+  e.preventDefault();
+
+  // Find the account based on username input
+  currentAccount = accounts.find(
+    acc => acc.username === inputLoginUsername.value
+  );
+  
+  // Check if PIN is correct  
+  if (currentAccount?.pin === Number(inputLoginPin.value)) {
+    // Display UI and welcome message
+    labelWelcome.textContent = `Welcome back, ${
+      currentAccount.owner.split(' ')[0]
+    }`;
+    containerApp.style.opacity = 100;
+
+    // Clear input fields
+    inputLoginUsername.value = inputLoginPin.value = '';
+    inputLoginPin.blur();
+
+    // Update UI
+    displayMovements(currentAccount.movements);
+    calcDisplayBalance(currentAccount.movements);
+    calcDisplaySummary(currentAccount.movements);
+    
+  }
+
+})
