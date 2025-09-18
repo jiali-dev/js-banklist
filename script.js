@@ -193,7 +193,24 @@ btnLogin.addEventListener('click', function (e) {
     }
   });
 
-  btnClose.addEventListener('click', function (e) {
+  // Add Loan
+  btnLoan.addEventListener( 'click', function (e) {
+    
+    // Prevent form from submitting
+    e.preventDefault();
+
+    const amount = Number(inputLoanAmount.value);
+
+    if( amount > 0 && currentAccount.movements.some( mov => mov >= amount * 0.1 ) ) {
+      currentAccount.movements.push(amount);
+      updateUI(currentAccount);
+    }
+
+    inputLoanAmount.value = '';
+  });
+
+  // Close account
+  btnClose.addEventListener( 'click', function (e) {
     
     // Prevent form from submitting
     e.preventDefault();
