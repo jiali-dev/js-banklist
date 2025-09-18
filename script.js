@@ -212,5 +212,8 @@ btnLogin.addEventListener('click', function (e) {
       // Hide UI
       containerApp.style.opacity = 0;
     }
+
+    inputCloseUsername = inputClosePin = '';
+
   });
 });
