@@ -106,10 +106,10 @@ const createUsernames = function (accs) {
 };
 createUsernames(accounts);
 
-const calcDisplayBalance = function (movements) {
+const calcDisplayBalance = function (acc) {
   // Calculate and display balance
-  const balance = movements.reduce((acc, mov) => acc + mov, 0);
-  labelBalance.textContent = `${balance} EUR`;
+  acc.balance = acc.movements.reduce((accu, mov) => accu + mov, 0);
+  labelBalance.textContent = `${acc.balance} EUR`;
 };
 
 const calcDisplaySummary = function (acc) {
@@ -160,7 +160,7 @@ btnLogin.addEventListener('click', function (e) {
 
     // Update UI
     displayMovements(currentAccount.movements);
-    calcDisplayBalance(currentAccount.movements);
+    calcDisplayBalance(currentAccount);
     calcDisplaySummary(currentAccount);
     
   }
