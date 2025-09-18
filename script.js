@@ -117,20 +117,20 @@ const calcDisplaySummary = function (acc) {
   const income = acc.movements
     .filter(mov => mov > 0)
     .reduce((acc, mov) => acc + mov, 0);
-    labelSumIn.textContent = `${income}€`;
+  labelSumIn.textContent = `${income}€`;
 
   // Calculate and display outcome
   const out = acc.movements
     .filter(mov => mov < 0)
     .reduce((acc, mov) => acc + mov, 0);
-    labelSumOut.textContent = `${Math.abs(out)}€`;
+  labelSumOut.textContent = `${Math.abs(out)}€`;
 
   // Calculate and display interest
   const interest = acc.movements
     .filter(mov => mov > 0)
-    .map( deposit => (deposit * acc.interestRate) / 100)
+    .map(deposit => (deposit * acc.interestRate) / 100)
     .reduce((acc, int) => acc + int, 0);
-    labelSumInterest.textContent = `${interest}€`;
+  labelSumInterest.textContent = `${interest}€`;
 };
 
 // Login functionality
@@ -145,8 +145,8 @@ btnLogin.addEventListener('click', function (e) {
   currentAccount = accounts.find(
     acc => acc.username === inputLoginUsername.value
   );
-  
-  // Check if PIN is correct  
+
+  // Check if PIN is correct
   if (currentAccount?.pin === Number(inputLoginPin.value)) {
     // Display UI and welcome message
     labelWelcome.textContent = `Welcome back, ${
@@ -162,7 +162,27 @@ btnLogin.addEventListener('click', function (e) {
     displayMovements(currentAccount.movements);
     calcDisplayBalance(currentAccount);
     calcDisplaySummary(currentAccount);
-    
   }
 
-})
+  // Transfer Money Functionallity
+  btnTransfer.addEventListener('click', function (e) {
+    
+    // Prevent form from submitting
+    e.preventDefault();
+
+    const amount = Number(inputTransferAmount.value);
+    const receiverAcc = accounts.find(
+      acc => acc.username === inputTransferTo.value
+    );
+
+    if (
+      amount > 0 &&
+      amount <= currentAccount.balance &&
+      receiverAcc?.username !== currentAccount.username
+    ) {
+      // Doing the transfer
+      currentAccount.movements.push(-amount);
+      receiverAcc.movements.push(amount);
+    }
+  });
+});
