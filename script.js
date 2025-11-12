@@ -11,9 +11,9 @@ const account1 = {
   interestRate: 1.2, // %
   pin: 1111,
   movementsDates: [
-    '2019-11-18T21:31:17.178Z',
-    '2019-12-23T07:42:02.383Z',
-    '2020-01-28T09:15:04.904Z',
+    '2025-11-12T21:31:17.178Z',
+    '2025-11-03T07:42:02.383Z',
+    '2025-11-11T09:15:04.904Z',
     '2020-04-01T10:17:24.185Z',
     '2020-05-08T14:11:59.604Z',
     '2020-05-27T17:01:17.194Z',
@@ -139,6 +139,20 @@ const formatDate = ( date, time = false ) => {
   return formatDate
 }
 
+const daysPassed = ( date1, date2 ) => {
+
+  const diff = Math.round(Math.abs(date1 - date2) / (1000 * 24 * 60 * 60));
+
+  if( diff < 1 ) 
+    return 'Today';
+  else if( diff < 2 )
+    return 'Yesterday';
+  else if( diff < 30 )
+    return `${diff} days ago.`
+  else 
+    return formatDate(date1)
+}
+
 /////////////////////////////////////////////////
 const displayMovements = function (acc, sort = false) {
   containerMovements.innerHTML = '';
@@ -158,7 +172,7 @@ const displayMovements = function (acc, sort = false) {
     // Determine type
     const type = movement > 0 ? 'deposit' : 'withdrawal';
 
-    const displayDate = formatDate(new Date(movementDate));
+    const displayDate = daysPassed(new Date(movementDate), new Date());
 
     // Create HTML string
     const html = `<div class="movements__row">
