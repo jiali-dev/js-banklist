@@ -122,18 +122,30 @@ const currencies = new Map([
 const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
 
 /////////////////////////////////////////////////
-const displayMovements = function (movements, sort = false) {
+const displayMovements = function (acc, sort = false) {
   containerMovements.innerHTML = '';
 
-  const movs = sort ? movements.slice().sort((a, b) => a - b) : movements;
+  const movs = sort ? acc.movements.slice().sort((a, b) => a - b) : acc.movements;
+  
   movs.forEach(function (mov, i) {
+
     // Determine type
     const type = mov > 0 ? 'deposit' : 'withdrawal';
+
+    const date = new Date(acc.movementsDates[i]);
+    const day = `${date.getDate()}`.padStart(2,0);
+    const month = `${date.getMonth()}`.padStart(2,0);
+    const year = date.getFullYear();
+
+    const displayDate = `${day}/${month}/${year}`;
 
     // Create HTML string
     const html = `<div class="movements__row">
           <div class="movements__type movements__type--${type}">
             ${i + 1} ${type.toUpperCase()}
+          </div>
+          <div class="movements__date">
+            ${displayDate}
           </div>
           <div class="movements__value">${mov.toFixed(2)}€</div>
         </div>`;
@@ -184,20 +196,10 @@ const calcDisplaySummary = function (acc) {
 
 // Update UI
 const updateUI = function (acc) {
-  displayMovements(acc.movements);
+  displayMovements(acc);
   calcDisplayBalance(acc);
   calcDisplaySummary(acc);
 };
-
-// Get Date
-const now = new Date();
-const day = `${now.getDay()}`.padStart(2,0);
-const month = `${now.getMonth()}`.padStart(2,0);
-const year = now.getFullYear();
-const hours = `${now.getHours()}`.padStart(2,0);
-const minutes = `${now.getMinutes()}`.padStart(2,0);
-
-labelDate.textContent = `${day}/${month}/${year}, ${hours}:${minutes}`
 
 // Login functionality
 let currentAccount;
@@ -219,6 +221,16 @@ btnLogin.addEventListener('click', function (e) {
       currentAccount.owner.split(' ')[0]
     }`;
     containerApp.style.opacity = 100;
+
+    // Get Current Date
+    const now = new Date();
+    const day = `${now.getDate()}`.padStart(2,0);
+    const month = `${now.getMonth()}`.padStart(2,0);
+    const year = now.getFullYear();
+    const hours = `${now.getHours()}`.padStart(2,0);
+    const minutes = `${now.getMinutes()}`.padStart(2,0);
+
+    labelDate.textContent = `${day}/${month}/${year}, ${hours}:${minutes}`
 
     // Clear input fields
     inputLoginUsername.value = inputLoginPin.value = '';
@@ -299,6 +311,6 @@ let sorted = false;
 btnSort.addEventListener('click', function (e) {
   // Prevent form from submitting
   e.preventDefault();
-  displayMovements(currentAccount.movements, !sorted);
+  displayMovements(currentAccount, !sorted);
   sorted = !sorted;
 });
