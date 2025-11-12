@@ -257,9 +257,15 @@ btnLogin.addEventListener('click', function (e) {
       amount <= currentAccount.balance &&
       receiverAcc?.username !== currentAccount.username
     ) {
+
       // Doing the transfer
       currentAccount.movements.push(-amount);
       receiverAcc?.movements.push(amount);
+
+      // Add transfer date
+      currentAccount.movementsDates.push(new Date().toISOString());
+      receiverAcc?.movementsDates.push(new Date().toISOString());
+
       updateUI(currentAccount);
     }
   });
@@ -276,6 +282,9 @@ btnLogin.addEventListener('click', function (e) {
       currentAccount.movements.some(mov => mov >= amount * 0.1)
     ) {
       currentAccount.movements.push(amount);
+      // Add transfer date
+      currentAccount.movementsDates.push(new Date().toISOString());
+      
       updateUI(currentAccount);
     }
 
