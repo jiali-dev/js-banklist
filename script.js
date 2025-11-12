@@ -122,6 +122,24 @@ const currencies = new Map([
 const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
 
 /////////////////////////////////////////////////
+// Functions
+const formatDate = ( date, time = false ) => {
+  const day = `${date.getDate()}`.padStart(2,0);
+  const month = `${date.getMonth()}`.padStart(2,0);
+  const year = date.getFullYear();
+
+  let formatDate =  `${day}/${month}/${year}`;
+
+  if( time ) {
+    const hours = `${date.getHours()}`.padStart(2,0);
+    const minutes = `${date.getMinutes()}`.padStart(2,0);
+    formatDate += ` , ${hours}:${minutes}`
+  }
+
+  return formatDate
+}
+
+/////////////////////////////////////////////////
 const displayMovements = function (acc, sort = false) {
   containerMovements.innerHTML = '';
 
@@ -140,12 +158,7 @@ const displayMovements = function (acc, sort = false) {
     // Determine type
     const type = movement > 0 ? 'deposit' : 'withdrawal';
 
-    const date = new Date(movementDate);
-    const day = `${date.getDate()}`.padStart(2,0);
-    const month = `${date.getMonth()}`.padStart(2,0);
-    const year = date.getFullYear();
-
-    const displayDate = `${day}/${month}/${year}`;
+    const displayDate = formatDate(new Date(movementDate));
 
     // Create HTML string
     const html = `<div class="movements__row">
@@ -232,13 +245,9 @@ btnLogin.addEventListener('click', function (e) {
 
     // Get Current Date
     const now = new Date();
-    const day = `${now.getDate()}`.padStart(2,0);
-    const month = `${now.getMonth()}`.padStart(2,0);
-    const year = now.getFullYear();
-    const hours = `${now.getHours()}`.padStart(2,0);
-    const minutes = `${now.getMinutes()}`.padStart(2,0);
+    const currentDate = formatDate(now, true);
 
-    labelDate.textContent = `${day}/${month}/${year}, ${hours}:${minutes}`
+    labelDate.textContent = currentDate;
 
     // Clear input fields
     inputLoginUsername.value = inputLoginPin.value = '';
