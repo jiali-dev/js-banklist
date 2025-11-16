@@ -157,6 +157,16 @@ const daysPassed = ( date1, date2, locale = '' ) => {
     return formatDate(date1, locale)
 }
 
+const formatCur = ( value, locale, currency ) => {
+  return new Intl.NumberFormat( 
+    locale,
+    {
+      style: 'currency',
+      currency: currency
+    }
+  ).format(value)
+}
+
 /////////////////////////////////////////////////
 const displayMovements = function (acc, sort = false) {
   containerMovements.innerHTML = '';
@@ -176,7 +186,7 @@ const displayMovements = function (acc, sort = false) {
     // Determine type
     const type = movement > 0 ? 'deposit' : 'withdrawal';
 
-    const displayDate = daysPassed(new Date(movementDate), new Date(), currentAccount.locale);
+    const displayDate = daysPassed(new Date(movementDate), new Date(), acc.locale);
 
     // Create HTML string
     const html = `<div class="movements__row">
@@ -186,7 +196,7 @@ const displayMovements = function (acc, sort = false) {
           <div class="movements__date">
             ${displayDate}
           </div>
-          <div class="movements__value">${movement.toFixed(2)}€</div>
+          <div class="movements__value">${formatCur(movement, acc.locale, acc.currency)}</div>
         </div>`;
 
     // Insert HTML into the DOM
@@ -209,7 +219,7 @@ createUsernames(accounts);
 const calcDisplayBalance = function (acc) {
   // Calculate and display balance
   acc.balance = acc.movements.reduce((accu, mov) => accu + mov, 0);
-  labelBalance.textContent = `${acc.balance.toFixed(2)} EUR`;
+  labelBalance.textContent = formatCur(acc.balance, acc.locale, acc.currency);
 };
 
 const calcDisplaySummary = function (acc) {
@@ -217,20 +227,20 @@ const calcDisplaySummary = function (acc) {
   const income = acc.movements
     .filter(mov => mov > 0)
     .reduce((acc, mov) => acc + mov, 0);
-  labelSumIn.textContent = `${income.toFixed(2)}€`;
+  labelSumIn.textContent = formatCur(income, acc.locale, acc.currency);
 
   // Calculate and display outcome
   const out = acc.movements
     .filter(mov => mov < 0)
     .reduce((acc, mov) => acc + mov, 0);
-  labelSumOut.textContent = `${Math.abs(out).toFixed(2)}€`;
+  labelSumOut.textContent = formatCur(Math.abs(out), acc.locale, acc.currency);
 
   // Calculate and display interest
   const interest = acc.movements
     .filter(mov => mov > 0)
     .map(deposit => (deposit * acc.interestRate) / 100)
     .reduce((acc, int) => acc + int, 0);
-  labelSumInterest.textContent = `${interest.toFixed(2)}€`;
+  labelSumInterest.textContent = formatCur(interest, acc.locale, acc.currency);
 };
 
 // Update UI
