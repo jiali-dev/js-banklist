@@ -143,18 +143,18 @@ const formatDate = ( date, locale = '', time = false ) => {
   return formatDate
 }
 
-const daysPassed = ( date1, date2 ) => {
+const daysPassed = ( date1, date2, locale = '' ) => {
 
   const diff = Math.round(Math.abs(date1 - date2) / (1000 * 24 * 60 * 60));
 
-  if( diff < 1 ) 
+  if( diff === 0 ) 
     return 'Today';
-  else if( diff < 2 )
+  else if( diff === 1 )
     return 'Yesterday';
-  else if( diff < 30 )
+  else if( diff <= 7 )
     return `${diff} days ago.`
   else 
-    return formatDate(date1)
+    return formatDate(date1, locale)
 }
 
 /////////////////////////////////////////////////
@@ -176,7 +176,7 @@ const displayMovements = function (acc, sort = false) {
     // Determine type
     const type = movement > 0 ? 'deposit' : 'withdrawal';
 
-    const displayDate = daysPassed(new Date(movementDate), new Date());
+    const displayDate = daysPassed(new Date(movementDate), new Date(), currentAccount.locale);
 
     // Create HTML string
     const html = `<div class="movements__row">
