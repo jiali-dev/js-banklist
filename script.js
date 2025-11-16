@@ -123,7 +123,11 @@ const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
 
 /////////////////////////////////////////////////
 // Functions
-const formatDate = ( date, time = false ) => {
+const formatDate = ( date, locale = '', time = false ) => {
+  if( locale ) {
+    return new Intl.DateTimeFormat(locale).format(date);
+  }
+  
   const day = `${date.getDate()}`.padStart(2,0);
   const month = `${date.getMonth()}`.padStart(2,0);
   const year = date.getFullYear();
@@ -259,7 +263,7 @@ btnLogin.addEventListener('click', function (e) {
 
     // Get Current Date
     const now = new Date();
-    const currentDate = formatDate(now, true);
+    const currentDate = formatDate(now, currentAccount.locale, true);
 
     labelDate.textContent = currentDate;
 
