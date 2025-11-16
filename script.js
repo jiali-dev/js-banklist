@@ -167,6 +167,34 @@ const formatCur = ( value, locale, currency ) => {
   ).format(value)
 }
 
+const startLogoutTimers = function(duration = 300) { // default: 5 minutes
+  
+  let time = duration;
+
+  const tick = function( ) {
+    
+    const min = String(Math.trunc(time / 60)).padStart(2,0);
+    const sec = String(time % 60).padStart(2,0);
+
+    labelTimer.textContent = `${min}:${sec}`;
+
+    if( time === 0 ) {
+      clearInterval(timer);
+      // Display UI and Log in message
+      labelWelcome.textContent = 'Log in to get started';
+      containerApp.style.opacity = 0;
+      return;
+    }
+
+    time--;
+
+  }
+  
+  tick(); // run immediately
+  const timer = setInterval( tick, 1000);
+  return timer;
+}
+
 /////////////////////////////////////////////////
 const displayMovements = function (acc, sort = false) {
   containerMovements.innerHTML = '';
@@ -251,7 +279,7 @@ const updateUI = function (acc) {
 };
 
 // Login functionality
-let currentAccount;
+let currentAccount, timer;
 
 // Add Event listener for login button
 btnLogin.addEventListener('click', function (e) {
@@ -280,6 +308,10 @@ btnLogin.addEventListener('click', function (e) {
     // Clear input fields
     inputLoginUsername.value = inputLoginPin.value = '';
     inputLoginPin.blur();
+
+    // Set log out timer
+    if( timer ) clearInterval(timer);
+    timer = startLogoutTimers();
 
     // Update UI
     updateUI(currentAccount);
@@ -312,6 +344,10 @@ btnLogin.addEventListener('click', function (e) {
       receiverAcc?.movementsDates.push(new Date().toISOString());
 
       updateUI(currentAccount);
+
+      // Reset timer
+      clearInterval(timer);
+      timer = startLogoutTimers();
     }
   });
 
@@ -333,6 +369,10 @@ btnLogin.addEventListener('click', function (e) {
           currentAccount.movementsDates.push(new Date().toISOString());
           
           updateUI(currentAccount);
+
+          // Reset timer
+          clearInterval(timer);
+          timer = startLogoutTimers();
         }, 2500
       )
     }
